@@ -1,8 +1,60 @@
+import { Header, StatsCard, TripCard } from "components";
+import { allTrips, dashboardStats, user, users } from "~/constants";
+
+const { totalUsers, usersJoined, totalTrips, tripsCreated, userRole } = dashboardStats;
+
 const Dashboard = () => {
   return (
-    <div className="border-2 border-red-500">
-        Dashboardss
-    </div>
+    <main className="dashboard wrapper">
+        <Header 
+            title={`Welcome back, ${user?.name || "User"}`}
+            description="Track activity, trends and popular destinations in real time"
+        />
+
+        {/* Stats */}
+        <section className="flex flex-col gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
+            <StatsCard 
+              headerTitle="Total Users"
+              total={totalUsers}
+              currentMonthCount={usersJoined.currentMonth}
+              lastMonthCount={usersJoined.lastMonth}
+            />
+            <StatsCard 
+              headerTitle="Total Trips"
+              total={totalTrips}
+              currentMonthCount={tripsCreated.currentMonth}
+              lastMonthCount={tripsCreated.lastMonth}
+            />
+            <StatsCard 
+              headerTitle="Active Users Today"
+              total={userRole.total}
+              currentMonthCount={userRole.correntMonth}
+              lastMonthCount={userRole.lastMonth}
+            />
+          </div>
+        </section>
+
+        {/* Created Trips */}
+        <section className="container">
+          <h1 className="text-xl font-semibold text-dark-100">
+            Created Trips
+          </h1>
+          <div className="trip-grid">
+            {allTrips.slice(0, 4).map(({id, name, imageUrls, estimatedPrice, tags, itinerary}) => (
+              <TripCard 
+                key={id} 
+                id={id.toString()}
+                name={name}
+                imageUrl={imageUrls[0]}
+                location={itinerary?.[0]?.location ?? ""}
+                tags={tags}
+                price={estimatedPrice}
+              />
+            ))}
+          </div>
+        </section>
+    </main>
   );
 };
 
