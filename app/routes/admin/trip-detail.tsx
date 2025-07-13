@@ -139,14 +139,14 @@ const TripDetail = ({loaderData}: Route.ComponentProps) => {
             <h2>{estimatedPrice}</h2>
         </section>
 
-        <p className="text-sm md:text-lg font-normal text-dark-400">{description}</p>
+        <p className="text-base md:text-lg font-normal text-dark-400">{description}</p>
 
         {/* Itinerary */}
         <ul className="itinerary">
             {
               itinerary?.map((dayplan: DayPlan, index: number) => (
                 <li key={index} className="mb-10">
-                  <h3 className="p-22-semibold text-dark-100 mb-2">
+                  <h3 className="p-24-semibold text-dark-100 mb-2">
                     Day {dayplan.day}: {dayplan.location}
                   </h3>
                   <ul>
@@ -154,7 +154,7 @@ const TripDetail = ({loaderData}: Route.ComponentProps) => {
                       dayplan.activities?.map((activity, index: number) => (
                         <li key={index} className="mb-2">
                           <span className="flex-shrink-0 p-18-semibold">{activity.time}</span>
-                          <p className="flex-grow">{activity.description}</p>
+                          <p className="flex-grow text-base">{activity.description}</p>
                         </li>
                       ))
                     }
@@ -169,18 +169,18 @@ const TripDetail = ({loaderData}: Route.ComponentProps) => {
           visitTimeAndWeatherInfo?.map((section) => (
             <section key={section.title} className="visit">
               <div>
-                <h3>
+                <h3 className="p-24-semibold text-dark-100 mb-2">
                   {section.title}
+                </h3>
                   <ul>
                     {
                       section.items?.map((item) => (
                         <li key={item}>
-                          <p className="flex-grow">{item}</p>
+                          <p className="flex-grow text-base">{item}</p>
                         </li>
                       ))
                     }
-                  </ul>
-                </h3>
+                  </ul>               
               </div>
             </section>
           ))
