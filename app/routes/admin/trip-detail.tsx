@@ -145,8 +145,8 @@ const TripDetail = ({loaderData}: Route.ComponentProps) => {
         <ul className="itinerary">
             {
               itinerary?.map((dayplan: DayPlan, index: number) => (
-                <li key={index}>
-                  <h3>
+                <li key={index} className="mb-10">
+                  <h3 className="p-22-semibold text-dark-100 mb-2">
                     Day {dayplan.day}: {dayplan.location}
                   </h3>
                   <ul>
