@@ -19,8 +19,8 @@ const MobileSideBar = () => {
     <div className="mobile-sidebar wrapper">
         <header>
             <Link to="/" className="link-logo">
-                <img src="/assets/icons/logo.svg" alt="logo" className="size-4" />
-                <h1>Tourvisto</h1>
+                <img src="/assets/icons/logo.svg" alt="logo" className="size-10 md:size-4" />
+                <h1 className="text-2xl font-bold">Tourvisto</h1>
             </Link>
                       
             <button 
