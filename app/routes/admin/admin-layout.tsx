@@ -44,4 +44,4 @@ const AdminLayout = () => {
 };
 
 export default AdminLayout;
-export { clientLoader };
+//export { clientLoader };
