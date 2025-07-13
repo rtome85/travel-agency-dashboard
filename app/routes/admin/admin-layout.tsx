@@ -5,26 +5,26 @@ import { MobileSideBar, NavItems } from "../../../components";
 import { account } from "~/appwrite/client";
 import { getExistingUser, storeUserData } from "~/appwrite/auth";
 
-const clientLoader = async () => {
-    try {
-        const user = await account.get();
+// const clientLoader = async () => {
+//     try {
+//         const user = await account.get();
         
-        if(!user.$id) return redirect('/sign-in');
+//         if(!user.$id) return redirect('/sign-in');
 
-        const existingUser = await getExistingUser(user.$id);
+//         const existingUser = await getExistingUser(user.$id);
 
-        if(existingUser?.status === 'user') {
-            return redirect('/');
-        }
+//         if(existingUser?.status === 'user') {
+//             return redirect('/');
+//         }
 
 
-        return existingUser?.$id ? existingUser : await storeUserData(); 
+//         return existingUser?.$id ? existingUser : await storeUserData(); 
 
-    } catch (error) {
-        console.error('Error in clientLoader', error);
-        return redirect('/sign-in');
-    }
-}
+//     } catch (error) {
+//         console.error('Error in clientLoader', error);
+//         return redirect('/sign-in');
+//     }
+// }
 
 const AdminLayout = () => {
     return (
