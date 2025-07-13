@@ -40,7 +40,7 @@ const NavItems = ({handleClick}: {handleClick?: () => void}) => {
                         </NavLink>
                     ))}
                 </nav>
-                <footer className="nav-footer">
+                {/* <footer className="nav-footer">
                         <img src={user?.imageUrl || "/assets/icons/user.svg"} alt={user?.name || "user"} className="w-10 h-10 rounded-full" referrerPolicy="no-referrer" />
                         <article>
                             <h2>{user?.name || "user"}</h2>
@@ -52,7 +52,7 @@ const NavItems = ({handleClick}: {handleClick?: () => void}) => {
                         >
                             <img src="/assets/icons/logout.svg" alt="logout" className="size-6" />
                         </button>
-                </footer>
+                </footer> */}
             </div>
         </section>
     )

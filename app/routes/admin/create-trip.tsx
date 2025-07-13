@@ -74,12 +74,17 @@ const CreateTrip = ({loaderData}: Route.ComponentProps) => {
       return;
     }
 
-    const user = await account.get();
-    if(!user){
-      setError('User not authenticated')
-      setLoading(false)
-      return;
-    }
+    // const user = await account.get();
+    // if(!user){
+    //   setError('User not authenticated')
+    //   setLoading(false)
+    //   return;
+    // }
+    // const user = {
+    //   $id: '6873c9b5c4feca9b8de7'
+    // }
+    // console.log(user);
+    
 
     try {
       const response = await fetch('/api/create-trip', {
@@ -92,7 +97,7 @@ const CreateTrip = ({loaderData}: Route.ComponentProps) => {
           interests: formData.interest,
           budget: formData.budget, 
           groupType: formData.groupType, 
-          userId: user.$id
+          //userId: user.$id
         })
       })
 
