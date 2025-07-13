@@ -17,6 +17,7 @@ const clientLoader = async () => {
             return redirect('/');
         }
 
+
         return existingUser?.$id ? existingUser : await storeUserData(); 
 
     } catch (error) {

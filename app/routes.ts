@@ -5,8 +5,13 @@ export default [
         route('dashboard', 'routes/admin/dashboard.tsx' ),
         route('all-users', 'routes/admin/all-users.tsx' ),
         route('trips', 'routes/admin/trips.tsx' ),
-        route('trips/create', 'routes/admin/create-trip.tsx' )
+        route('trips/create', 'routes/admin/create-trip.tsx' ),
+        route('/trips/:tripId', 'routes/admin/trip-detail.tsx')
     ]),
     route('sign-in', 'routes/root/sign-in.tsx'), 
-    route('api/create-trip', 'routes/api/create-trip.ts')
+    route('api/create-trip', 'routes/api/create-trip.ts'),
+    layout('routes/root/page-layout.tsx', [
+        index('routes/root/travel-page.tsx')
+    ])
+    
 ] satisfies RouteConfig;
