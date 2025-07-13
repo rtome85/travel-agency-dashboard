@@ -121,13 +121,13 @@ const Dashboard = ({loaderData}: Route.ComponentProps) => {
 
         {/* Charts */}
         <section className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+          <div className="bg-white shadow-sm py-4 rounded-lg">
                 <ChartComponent
                     id="chart-1"
                     primaryXAxis={userXAxis}
                     primaryYAxis={useryAxis}
                     title="User Growth"
                     tooltip={{ enable: true}}
-                    className="bg-white shadow-sm py-4"
                 >
                     <Inject services={[ColumnSeries, SplineAreaSeries, Category, DataLabel, Tooltip]} />
 
@@ -153,14 +153,14 @@ const Dashboard = ({loaderData}: Route.ComponentProps) => {
                         />
                     </SeriesCollectionDirective>
                 </ChartComponent>
-
+            </div>
+            <div className="bg-white shadow-sm py-4 rounded-lg">
                 <ChartComponent
                     id="chart-2"
                     primaryXAxis={tripXAxis}
                     primaryYAxis={tripyAxis}
                     title="Trip Trends"
                     tooltip={{ enable: true}}
-                    className="bg-white shadow-sm py-4"
                 >
                     <Inject services={[ColumnSeries, SplineAreaSeries, Category, DataLabel, Tooltip]} />
 
@@ -176,6 +176,7 @@ const Dashboard = ({loaderData}: Route.ComponentProps) => {
                         />
                     </SeriesCollectionDirective>
                 </ChartComponent>
+            </div>
             </section>
 
             <section className="user-trip  grid grid-cols-1 lg:grid-cols-2 gap-5">
