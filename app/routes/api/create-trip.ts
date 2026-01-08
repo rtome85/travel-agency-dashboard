@@ -1,25 +1,26 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { type ActionFunctionArgs, data } from "react-router"
+import { type ActionFunctionArgs, data } from "react-router";
 import { parseMarkdownToJson } from "~/lib/utils";
-import {appwriteConfig, databases} from '~/appwrite/client'
-import {ID} from 'appwrite'
+import { appwriteConfig, databases } from "~/appwrite/client";
+import { ID } from "appwrite";
+import { Ollama } from "ollama";
 
-export const action = async({request} : ActionFunctionArgs) => {
-    const {
-        country, 
-        numberOfDays,
-        travelStyle,
-        interests,
-        budget,
-        groupType,
-        //userId
-    } = await request.json();
+export const action = async ({ request }: ActionFunctionArgs) => {
+	const {
+		country,
+		numberOfDays,
+		travelStyle,
+		interests,
+		budget,
+		groupType,
+		//userId
+	} = await request.json();
 
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
-    const unsplashApiKey = process.env.UNSPLASH_ACCESS_KEY!;
+	const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+	const unsplashApiKey = process.env.UNSPLASH_ACCESS_KEY!;
 
-    try {
-        const prompt = `Generate a ${numberOfDays}-day travel itinerary for ${country} based on the following user information:
+	try {
+		const prompt = `Generate a ${numberOfDays}-day travel itinerary for ${country} based on the following user information:
         Budget: '${budget}'
         Interests: '${interests}'
         TravelStyle: '${travelStyle}'
@@ -66,48 +67,84 @@ export const action = async({request} : ActionFunctionArgs) => {
         ]
         }`;
 
-        const textResult = await genAI
-            .getGenerativeModel({model: 'gemini-2.0-flash'})
-            .generateContent([prompt])
+		// const textResult = await genAI
+		// 	.getGenerativeModel({ model: "gemini-2.0-flash" })
+		// 	.generateContent([prompt]);
 
-        const trip = parseMarkdownToJson(textResult.response.text())
-        
-        if (!trip) {
-            throw new Error('Failed to parse AI response into valid JSON');
-        }
+		const ollama = new Ollama({
+			host: "https://ollama.com",
+			headers: {
+				Authorization: "Bearer " + process.env.OLLAMA_API_KEY,
+			},
+		});
 
-        let imageUrls: string[] = [];
-        try {
-            const imageResponse = await fetch(`https://api.unsplash.com/search/photos?query=${country} ${interests} ${travelStyle}&client_id=${unsplashApiKey}`);
-            
-            if (imageResponse.ok) {
-                const imageData = await imageResponse.json();
-                if (imageData && imageData.results && Array.isArray(imageData.results)) {
-                    imageUrls = imageData.results.slice(0, 3)
-                        .map((result: any) => result.urls?.regular || null);
-                }
-            }
-        } catch (imageError) {
-            console.error('Error fetching images:', imageError);
-            // Continue without images if Unsplash API fails
-        }
+		const textResult = await ollama.chat({
+			model: "gpt-oss:120b",
+			messages: [{ role: "user", content: prompt }],
+			stream: false,
+		});
 
-        const result = await databases.createDocument(
-            appwriteConfig.databaseId,
-            appwriteConfig.tripCollectionId,
-            ID.unique(), 
-            {
-                tripDetail: JSON.stringify(trip), 
-                createdAt: new Date().toISOString(), 
-                imageUrls, 
-                //userId,
-            }
-        )
+		// for await (const part of textResult) {
+		// 	process.stdout.write(part.message.content);
+		// }
 
-        return data({id: result.$id})
+		// console.log(textResult);
 
-    } catch (error) {
-        console.error('Error generating travel plan: ', error)
-        return data({error: 'Failed to generate travel plan'}, {status: 500})
-    }
-}
+		// const trip = parseMarkdownToJson(textResult.response.text());
+
+		const fullResponse = textResult.message.content;
+
+		let trip;
+		try {
+			// Try parsing as direct JSON first
+			trip = JSON.parse(fullResponse);
+		} catch {
+			// Fall back to markdown parsing
+			trip = parseMarkdownToJson(fullResponse);
+		}
+
+		if (!trip) {
+			throw new Error("Failed to parse AI response into valid JSON");
+		}
+
+		let imageUrls: string[] = [];
+		try {
+			const imageResponse = await fetch(
+				`https://api.unsplash.com/search/photos?query=${country} ${interests} ${travelStyle}&client_id=${unsplashApiKey}`
+			);
+
+			if (imageResponse.ok) {
+				const imageData = await imageResponse.json();
+				if (
+					imageData &&
+					imageData.results &&
+					Array.isArray(imageData.results)
+				) {
+					imageUrls = imageData.results
+						.slice(0, 3)
+						.map((result: any) => result.urls?.regular || null);
+				}
+			}
+		} catch (imageError) {
+			console.error("Error fetching images:", imageError);
+			// Continue without images if Unsplash API fails
+		}
+
+		const result = await databases.createDocument(
+			appwriteConfig.databaseId,
+			appwriteConfig.tripCollectionId,
+			ID.unique(),
+			{
+				tripDetail: JSON.stringify(trip),
+				createdAt: new Date().toISOString(),
+				imageUrls,
+				//userId,
+			}
+		);
+
+		return data({ id: result.$id });
+	} catch (error) {
+		console.error("Error generating travel plan: ", error);
+		return data({ error: "Failed to generate travel plan" }, { status: 500 });
+	}
+};
