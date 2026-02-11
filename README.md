@@ -384,7 +384,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 For questions, issues, or suggestions:
 
 - Open an issue on [GitHub Issues](https://github.com/yourusername/tourvisto/issues)
-- Reach out via email: your.email@example.com
+- Reach out via email: contact@robtome.com
 
 ---
 
